@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Мои расходы</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+
+    <div class="topbar">
+        <div>
+            <h1>Мои расходы</h1>
+            <p class="subtitle">Личный трекер расходов</p>
+        </div>
+        <a href="/expenses/new" class="btn btn-primary">+ Добавить расход</a>
+    </div>
+
+    <!-- Фильтр -->
+    <div class="card">
+        <h2 class="card-title">Фильтр</h2>
+        <form method="get" action="/expenses" class="filters">
+            <div class="field">
+                <label for="category">Категория</label>
+                <input id="category" name="category" type="text"
+                       placeholder="Например, Еда" th:value="${category}">
+            </div>
+            <div class="field">
+                <label for="from">С даты</label>
+                <input id="from" name="from" type="date" th:value="${from}">
+            </div>
+            <div class="field">
+                <label for="to">По дату</label>
+                <input id="to" name="to" type="date" th:value="${to}">
+            </div>
+            <div class="buttons">
+                <button type="submit" class="btn btn-primary">Применить</button>
+                <a href="/expenses" class="btn btn-ghost">Сбросить</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Список расходов -->
+    <div class="card">
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 40px;">№</th>
+                <th style="width: 110px;">Дата</th>
+                <th>Описание</th>
+                <th style="width: 140px;">Категория</th>
+                <th style="width: 130px;">Сумма, <span th:text="${currencySymbol}">₽</span></th>
+                <th style="width: 200px;"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="expense, stat : ${expenses}">
+                <td th:text="${stat.index + 1}">1</td>
+                <td th:text="${expense.date}">2026-10-08</td>
+                <td th:text="${expense.description}">Описание</td>
+                <td th:text="${expense.category}">Еда</td>
+                <td class="amount"
+                    th:text="${#numbers.formatDecimal(expense.amount, 1, 'COMMA', 2, 'POINT')}">
+                    0,00
+                </td>
+                <td class="actions">
+                    <a th:href="@{'/expenses/edit/' + ${expense.id}}"
+                       class="btn btn-ghost btn-sm">Редактировать</a>
+                    <form th:action="@{'/expenses/delete/' + ${expense.id}}" method="post"
+                          onsubmit="return confirm('Удалить этот расход?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${expenses.isEmpty()}">
+                <td colspan="6" class="empty">Расходов пока нет. Добавьте первый!</td>
+            </tr>
+            </tbody>
+            <tfoot th:if="${!expenses.isEmpty()}">
+            <tr>
+                <td colspan="4">Итого</td>
+                <td class="amount"
+                    th:text="${#numbers.formatDecimal(total, 1, 'COMMA', 2, 'POINT')}">
+                    0,00
+                </td>
+                <td></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

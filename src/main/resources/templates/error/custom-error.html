@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${errorTitle}">Ошибка</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container" style="text-align: center; margin-top: 50px;">
+    <div class="card">
+        <h1 style="color: var(--danger);" th:text="${errorTitle}">Ошибка</h1>
+        <p th:text="${errorMessage}" style="font-size: 18px; margin: 20px 0;">Описание ошибки</p>
+        <a href="/expenses" class="btn btn-primary">← Вернуться к списку</a>
+    </div>
+</div>
+</body>
+</html>
